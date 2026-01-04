@@ -68,13 +68,13 @@
 <body>
   <div class="card">
     <div class="notice">
-      Cat For Cash official trailer will be released at 5:00 PM (Thai time)
+      Cat For Cash official trailer will be released at 5:00 PM (Thai time).
     </div>
 
     <div class="auto" id="autoText"></div>
 
     <div class="result">
-      <h3>Event time in your time zone</h3>
+      <h3>Trend start time in your location</h3>
       <div class="time" id="timeOutput"></div>
     </div>
 
@@ -83,14 +83,12 @@
   </div>
 
   <script>
-    // TEST MODE: countdown set to 7:45 PM today (local time)
-    const baseLocalDate = new Date();
-    baseLocalDate.setHours(19, 45, 0, 0);
-
-    // Event time: 5:00 PM on Jan 11, 2026 (Thai time, UTC+7)
-const EVENT_TIME_UTC = new Date(Date.UTC(2026, 0, 11, 10, 0, 0));
+    // Event time: 05:00 PM 11/01/2026 (Thai time, UTC+7)
 // 17:00 ICT = 10:00 UTC
+const EVENT_TIME_UTC = new Date(Date.UTC(2026, 0, 11, 10, 0, 0));
 
+// Convert event time to user's local time
+const baseLocalDate = new Date(EVENT_TIME_UTC);
 
     function formatDate(date) {
       let hours = date.getHours();
@@ -112,10 +110,6 @@ const EVENT_TIME_UTC = new Date(Date.UTC(2026, 0, 11, 10, 0, 0));
       const offsetHr = offsetMin / 60;
       const sign = offsetHr >= 0 ? '+' : '';
       document.getElementById('autoText').textContent = `We detected your time zone automatically (UTC${sign}${offsetHr}).`;
-    }
-
-    function updateCountdown() {
-      const now = new Date();
       const diff = baseLocalDate.getTime() - now.getTime();
       const el = document.getElementById('countdown');
 
