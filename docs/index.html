@@ -1,1 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cat For Cash – Time Zone Converter</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ffe5d0, #fff3e8);
+      font-family: "Segoe UI", "Nunito", system-ui, sans-serif;
+      color: #5a3a1e;
+    }
 
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(255, 165, 90, 0.25);
+      padding: 28px 30px 32px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .notice {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .auto {
+      font-size: 13px;
+      color: #8a5a3a;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid #ffd2b0;
+      font-size: 14px;
+      outline: none;
+      background: #fffaf6;
+    }
+
+    .manual {
+      display: none;
+      margin-top: 16px;
+    }
+
+    button {
+      margin-top: 18px;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ff9f5a, #ff7a2f);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(255, 122, 47, 0.35);
+    }
+
+    .link {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #ff7a2f;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .result {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px dashed #ffd7bb;
+    }
+
+    .result h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: #7a3f14;
+    }
+
+    .time {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ff7a2f;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="notice">
+      Cat For Cash official trailer was uploaded at 5:00 PM (Thai time). Please check the event time below.
+    </div>
+
+    <div class="auto" id="autoText"></div>
+
+    <div class="result">
+      <h3>Event time in your time zone</h3>
+      <div class="time" id="timeOutput"></div>
+    </div>
+
+    <div class="link" id="toggleManual">Want to check another time zone?</div>
+
+    <div class="manual" id="manualBox">
+      <label for="timezone">Choose your time zone offset</label>
+      <select id="timezone">
+        <option value="1">UTC+01</option>
+        <option value="2">UTC+02</option>
+        <option value="3">UTC+03</option>
+        <option value="3.5">UTC+03:30</option>
+        <option value="4">UTC+04</option>
+        <option value="4.5">UTC+04:30</option>
+        <option value="5">UTC+05</option>
+        <option value="5.5">UTC+05:30</option>
+        <option value="5.75">UTC+05:45</option>
+        <option value="6">UTC+06</option>
+        <option value="6.5">UTC+06:30</option>
+        <option value="7">UTC+07</option>
+        <option value="8">UTC+08</option>
+        <option value="8.75">UTC+08:45</option>
+        <option value="9">UTC+09</option>
+        <option value="9.5">UTC+09:30</option>
+        <option value="10">UTC+10</option>
+        <option value="10.5">UTC+10:30</option>
+        <option value="11">UTC+11</option>
+        <option value="12">UTC+12</option>
+        <option value="12.75">UTC+12:45</option>
+        <option value="13">UTC+13</option>
+        <option value="13.75">UTC+13:45</option>
+        <option value="14">UTC+14</option>
+        <option value="-1">UTC-01</option>
+        <option value="-2">UTC-02</option>
+        <option value="-2.5">UTC-02:30</option>
+        <option value="-3">UTC-03</option>
+        <option value="-3.5">UTC-03:30</option>
+        <option value="-4">UTC-04</option>
+        <option value="-4.5">UTC-04:30</option>
+        <option value="-5">UTC-05</option>
+        <option value="-6">UTC-06</option>
+        <option value="-7">UTC-07</option>
+        <option value="-8">UTC-08</option>
+        <option value="-9">UTC-09</option>
+        <option value="-9.5">UTC-09:30</option>
+        <option value="-10">UTC-10</option>
+        <option value="-11">UTC-11</option>
+        <option value="-12">UTC-12</option>
+      </select>
+
+      <button id="convertBtn">View event time in this time zone</button>
+    </div>
+  </div>
+
+  <script>
+    const baseUTCDate = new Date(Date.UTC(2026, 0, 11, 10, 30)); // 5:30 PM UTC+7
+
+    function formatDate(date) {
+      let hours = date.getHours();
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${hours}:${minutes} ${ampm} ${day}/${month}/${year}`;
+    }
+
+    function showAutoTime() {
+      const localDate = new Date(baseUTCDate.getTime());
+      document.getElementById('timeOutput').textContent = formatDate(localDate);
+
+      const offsetMin = -new Date().getTimezoneOffset();
+      const offsetHr = offsetMin / 60;
+      const sign = offsetHr >= 0 ? '+' : '';
+      document.getElementById('autoText').textContent = `We detected your time zone automatically (UTC${sign}${offsetHr}).`;
+    }
+
+    showAutoTime();
+
+    document.getElementById('toggleManual').onclick = () => {
+      document.getElementById('manualBox').style.display = 'block';
+    };
+
+    document.getElementById('convertBtn').onclick = () => {
+      const offset = parseFloat(document.getElementById('timezone').value);
+      const converted = new Date(baseUTCDate.getTime() + offset * 60 * 60 * 1000);
+      document.getElementById('timeOutput').textContent = formatDate(converted);
+    };
+  </script>
+</body>
+</html>
