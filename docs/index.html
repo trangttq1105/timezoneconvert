@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cat For Cash – Time Zone Converter</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ffe5d0, #fff3e8);
+      font-family: "Segoe UI", "Nunito", "Rounded Mplus 1c", system-ui, sans-serif;
+      color: #5a3a1e;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(255, 165, 90, 0.25);
+      padding: 28px 30px 32px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .notice {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid #ffd2b0;
+      font-size: 14px;
+      outline: none;
+      background: #fffaf6;
+    }
+
+    select:focus {
+      border-color: #ff9f5a;
+      box-shadow: 0 0 0 3px rgba(255, 159, 90, 0.2);
+    }
+
+    button {
+      margin-top: 18px;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ff9f5a, #ff7a2f);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(255, 122, 47, 0.35);
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: 0 5px 12px rgba(255, 122, 47, 0.35);
+    }
+
+    .result {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px dashed #ffd7bb;
+      display: none;
+    }
+
+    .result h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: #7a3f14;
+    }
+
+    .time {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ff7a2f;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="notice">
+      Cat For Cash official trailer was uploaded at 5:00 PM (Thai time). Please choose your time zone below to convert the event time.
+    </div>
+
+    <label for="timezone">Choose your time zone offset</label>
+    <select id="timezone">
+      <option value="1">UTC+01</option>
+      <option value="2">UTC+02</option>
+      <option value="3">UTC+03</option>
+      <option value="3.5">UTC+03:30</option>
+      <option value="4">UTC+04</option>
+      <option value="4.5">UTC+04:30</option>
+      <option value="5">UTC+05</option>
+      <option value="5.5">UTC+05:30</option>
+      <option value="5.75">UTC+05:45</option>
+      <option value="6">UTC+06</option>
+      <option value="6.5">UTC+06:30</option>
+      <option value="7" selected>UTC+07</option>
+      <option value="8">UTC+08</option>
+      <option value="8.75">UTC+08:45</option>
+      <option value="9">UTC+09</option>
+      <option value="9.5">UTC+09:30</option>
+      <option value="10">UTC+10</option>
+      <option value="10.5">UTC+10:30</option>
+      <option value="11">UTC+11</option>
+      <option value="11">UTC+11:00</option>
+      <option value="12">UTC+12</option>
+      <option value="12.75">UTC+12:45</option>
+      <option value="13">UTC+13</option>
+      <option value="13.75">UTC+13:45</option>
+      <option value="14">UTC+14</option>
+      <option value="-1">UTC-01</option>
+      <option value="-2">UTC-02</option>
+      <option value="-2.5">UTC-02:30</option>
+      <option value="-3">UTC-03</option>
+      <option value="-3.5">UTC-03:30</option>
+      <option value="-4">UTC-04</option>
+      <option value="-4.5">UTC-04:30</option>
+      <option value="-5">UTC-05</option>
+      <option value="-6">UTC-06</option>
+      <option value="-7">UTC-07</option>
+      <option value="-8">UTC-08</option>
+      <option value="-9">UTC-09</option>
+      <option value="-9.5">UTC-09:30</option>
+      <option value="-10">UTC-10</option>
+      <option value="-11">UTC-11</option>
+      <option value="-12">UTC-12</option>
+    </select>
+
+    <button id="convertBtn">View event time in your time zone</button>
+
+    <div class="result" id="result">
+      <h3>Event time in your time zone</h3>
+      <div class="time" id="timeOutput"></div>
+    </div>
+  </div>
+
+  <script>
+    const baseOffset = 7; // UTC+7 (Thai time)
+    const baseDate = new Date(Date.UTC(2026, 0, 11, 10, 30)); // 5:30 PM UTC+7 => 10:30 UTC
+
+    function formatDate(date) {
+      let hours = date.getUTCHours();
+      const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+
+      const day = date.getUTCDate().toString().padStart(2, '0');
+      const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+      const year = date.getUTCFullYear();
+
+      return `${hours}:${minutes} ${ampm} ${day}/${month}/${year}`;
+    }
+
+    document.getElementById('convertBtn').addEventListener('click', () => {
+      const offset = parseFloat(document.getElementById('timezone').value);
+      const diffHours = offset - 0;
+      const converted = new Date(baseDate.getTime() + diffHours * 60 * 60 * 1000);
+
+      document.getElementById('timeOutput').textContent = formatDate(converted);
+      document.getElementById('result').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
