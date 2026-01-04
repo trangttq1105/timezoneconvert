@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cat For Cash – Countdown</title>
+
   <style>
     body {
       margin: 0;
@@ -65,11 +66,12 @@
     }
   </style>
 </head>
+
 <body>
   <div class="card">
     <div class="notice">
       Cat For Cash official trailer will be released at 5:00 PM (Thai time).
-    </div>
+        </div>
 
     <div class="auto" id="autoText"></div>
 
@@ -78,17 +80,19 @@
       <div class="time" id="timeOutput"></div>
     </div>
 
-    <div class="countdown-title">Counting down to Cat For Cash official trailer</div>
+    <div class="countdown-title">
+      Counting down to Cat For Cash official trailer
+    </div>
     <div class="countdown" id="countdown"></div>
   </div>
 
   <script>
-    // Event time: 05:00 PM 11/01/2026 (Thai time, UTC+7)
-// 17:00 ICT = 10:00 UTC
-const EVENT_TIME_UTC = new Date(Date.UTC(2026, 0, 11, 10, 0, 0));
-
-// Convert event time to user's local time
-const baseLocalDate = new Date(EVENT_TIME_UTC);
+    /* ===============================
+       EVENT TIME (FIXED)
+       05:00 PM – 11/01/2026 – Thai time (UTC+7)
+       = 10:00 UTC – 11/01/2026
+    =============================== */
+    const EVENT_TIME_UTC = new Date(Date.UTC(2026, 0, 11, 10, 0, 0));
 
     function formatDate(date) {
       let hours = date.getHours();
@@ -103,18 +107,25 @@ const baseLocalDate = new Date(EVENT_TIME_UTC);
       return `${hours}:${minutes} ${ampm} ${day}/${month}/${year}`;
     }
 
-    function showAutoTime() {
-      document.getElementById('timeOutput').textContent = formatDate(baseLocalDate);
+    function showLocalEventTime() {
+      const localDate = new Date(EVENT_TIME_UTC);
+      document.getElementById("timeOutput").textContent = formatDate(localDate);
 
       const offsetMin = -new Date().getTimezoneOffset();
       const offsetHr = offsetMin / 60;
-      const sign = offsetHr >= 0 ? '+' : '';
-      document.getElementById('autoText').textContent = `We detected your time zone automatically (UTC${sign}${offsetHr}).`;
-      const diff = baseLocalDate.getTime() - now.getTime();
-      const el = document.getElementById('countdown');
+      const sign = offsetHr >= 0 ? "+" : "";
+      document.getElementById("autoText").textContent =
+        `We detected your time zone automatically (UTC${sign}${offsetHr}).`;
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = EVENT_TIME_UTC - now;
+      const el = document.getElementById("countdown");
 
       if (diff <= 0) {
-        el.textContent = "The official trailer is out. Let's join the trending and streaming";
+        el.textContent =
+          "The official trailer is out. Let's join the trending and streaming";
         return;
       }
 
@@ -127,7 +138,7 @@ const baseLocalDate = new Date(EVENT_TIME_UTC);
       el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 
-    showAutoTime();
+    showLocalEventTime();
     updateCountdown();
     setInterval(updateCountdown, 1000);
   </script>
