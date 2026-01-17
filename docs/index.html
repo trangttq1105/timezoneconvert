@@ -68,8 +68,19 @@
     .cta {
       display: none;
       margin-top: 20px;
+
+          <div
+  id="afterEvent"
+  style="display:none; margin-top:20px; font-weight:700;"
+>
+  Thank you everyone for supporting Cat For Cash.
+  <br />
+  Let’s look forward to the next episode together.
+</div>
     }
 
+
+    
     .btn {
       display: block;
       padding: 12px;
@@ -192,25 +203,43 @@ const EVENT_TIME_UTC = new Date(Date.UTC(
     }
 
     function updateCountdown() {
-      const now = new Date();
-      const diff = EVENT_TIME_UTC - now;
+  const now = new Date();
+  const diff = EVENT_TIME_UTC - now;
 
-      if (diff <= 0) {
-        document.getElementById("countdown").style.display = "none";
-        document.getElementById("countdownTitle").style.display = "none";
-        document.getElementById("cta").style.display = "block";
-        return;
-      }
+  const ONE_DAY = 24 * 60 * 60 * 1000;
+  const sinceStart = now - EVENT_TIME_UTC;
 
-      const totalSeconds = Math.floor(diff / 1000);
-      const days = Math.floor(totalSeconds / 86400);
-      const hours = Math.floor((totalSeconds % 86400) / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
+  // AFTER 24 HOURS → hide quick post + CTA
+  if (sinceStart >= ONE_DAY) {
+    document.getElementById("countdown").style.display = "none";
+    document.getElementById("countdownTitle").style.display = "none";
+    document.getElementById("cta").style.display = "none";
 
-      document.getElementById("countdown").textContent =
-        `${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }
+    const quickPost = document.querySelector(".quick-post");
+    if (quickPost) quickPost.style.display = "none";
+
+    return;
+  }
+
+  // EVENT IS LIVE (0 → 24h)
+  if (diff <= 0) {
+    document.getElementById("countdown").style.display = "none";
+    document.getElementById("countdownTitle").style.display = "none";
+    document.getElementById("cta").style.display = "block";
+    return;
+  }
+
+  // COUNTDOWN
+  const totalSeconds = Math.floor(diff / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  document.getElementById("countdown").textContent =
+    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
 
     showLocalEventTime();
     updateCountdown();
