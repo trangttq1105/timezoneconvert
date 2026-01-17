@@ -69,14 +69,6 @@
       display: none;
       margin-top: 20px;
 
-          <div
-  id="afterEvent"
-  style="display:none; margin-top:20px; font-weight:700;"
->
-  Thank you everyone for supporting Cat For Cash.
-  <br />
-  Let’s look forward to the next episode together.
-</div>
     }
 
 
@@ -160,6 +152,15 @@
         Join the trending now
       </a>
     </div>
+
+              <div
+  id="afterEvent"
+  style="display:none; margin-top:20px; font-weight:700;"
+>
+  Thank you everyone for supporting Cat For Cash.
+  <br />
+  Let’s look forward to the next episode together.
+</div>
   </div>
 
   <script>
@@ -202,18 +203,19 @@ const EVENT_TIME_UTC = new Date(Date.UTC(
         `We detected your time zone automatically (UTC${sign}${offsetHr}).`;
     }
 
-    function updateCountdown() {
+function updateCountdown() {
   const now = new Date();
   const diff = EVENT_TIME_UTC - now;
 
   const ONE_DAY = 24 * 60 * 60 * 1000;
   const sinceStart = now - EVENT_TIME_UTC;
 
-  // AFTER 24 HOURS → hide quick post + CTA
+  // AFTER 24 HOURS
   if (sinceStart >= ONE_DAY) {
     document.getElementById("countdown").style.display = "none";
     document.getElementById("countdownTitle").style.display = "none";
     document.getElementById("cta").style.display = "none";
+    document.getElementById("afterEvent").style.display = "block";
 
     const quickPost = document.querySelector(".quick-post");
     if (quickPost) quickPost.style.display = "none";
@@ -239,7 +241,6 @@ const EVENT_TIME_UTC = new Date(Date.UTC(
   document.getElementById("countdown").textContent =
     `${days}d ${hours}h ${minutes}m ${seconds}s`;
 }
-
 
     showLocalEventTime();
     updateCountdown();
